@@ -1,6 +1,6 @@
 package Confectionary;
 
-public class Workers {
+public class Worker {
 
     private int id;
     private String name;
@@ -9,14 +9,14 @@ public class Workers {
     private String occupation;
     private Addresses address;
 
-    public Workers(){
+    public Worker(){
     }
     public int getWorker_id() {
-        return worker_id;
+        return id;
     }
 
     public void setWorker_id(int worker_id) {
-        this.worker_id = worker_id;
+        this.id = worker_id;
     }
 
     public String getName() {
@@ -49,14 +49,6 @@ public class Workers {
 
     public void setOccupation(String occupation) {
         this.occupation = occupation;
-    }
-
-    public String getHours_per_week() {
-        return hours_per_week;
-    }
-
-    public void setHours_per_week(String hours_per_week) {
-        this.hours_per_week = hours_per_week;
     }
 
     public Addresses getAddress() {

@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import Confectionary.Workers;
 import Confectionary.Addresses;
+import Confectionary.Worker;
 
 public class database_connection {
     private static final String connectionName = "jdbc:oracle:thin:@85.254.218.229:1521:DITF11";
@@ -31,64 +31,38 @@ public class database_connection {
         return DriverManager.getConnection(connectionName, username, password);
     }
 
-
-    public static List<Workers> getAllRowsFromWorkers(){
-    List<Workers> workerList = new ArrayList<>();
-    try (Connection db = getConnection()){
-        Statement stm = db.createStatement();
-        ResultSet resultSet = stm.executeQuery(GET_ALL_WORKERS);
-        while(resultSet.next()){
-            Workers worker = new Workers();
-            worker.setWorker_id(Integer.parseInt(resultSet.getObject(1).toString()));
-            worker.(getAllRowsFromWorkers());
-                worker.(((Struct) resultSet.getObject(2)));
-                worker..setAddress(getAdreseFromStruct((Struct) ((Ref)
-                        ((Struct) resultSet.getObject(2)).getAttributes()[5]).getObject()));
-                workerList.add(worker);
-            }
-
-        return workerList;
-    } catch (SQLException e){
-        System.err.format("SQL Status: %s\n%s", e.getSQLState(), e.getMessage());
-        e.printStackTrace();
-    } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return Collections.emptyList();
-    }
-    public static boolean insertIntoSkolniekiTable(Workers skolnieks) {
-        Connection conn = null;
+    public static boolean insertIntoWorkersTable(Worker worker) {
+        Connection db = null;
         try {
             db = getConnection();
             db.setAutoCommit(false);
-            PreparedStatement stmtSkolnieks = conn.prepareStatement(INSERT_INTO_WORKERS);
+            PreparedStatement stmWorkers = db.prepareStatement(INSERT_INTO_WORKERS);
 
-            stmWorkers.setBigDecimal(1, new BigDecimal(skolnieks.getId()));
-            stmWorkers.setBigDecimal(2, new BigDecimal(skolnieks.getWorkersInfo().getId()));
-            stmWorkers.setString(3, skolnieks.getWorkersInfo().getVards());
-            stmWorkers.setString(4, skolnieks.getWorkersInfo().getUzvards());
-            stmWorkers.setString(5, skolnieks.getWorkersInfo().getePast());
-            stmWorkers.setString(6, skolnieks.getWorkersInfo().getTelefonaNumurs());
-            stmWorkers.setBigDecimal(7, new BigDecimal(skolnieks.getKlaseId()));
+            stmWorkers.setBigDecimal(1, new BigDecimal(worker.getWorker_id()));
+            stmWorkers.setBigDecimal(2, new BigDecimal(worker.getWorkersInfo().getId()));
+            stmWorkers.setString(3, worker.getWorkersInfo().getVards());
+            stmWorkers.setString(4, worker.getWorkersInfo().getUzvards());
+            stmWorkers.setString(5, worker.getWorkersInfo().getePast());
+            stmWorkers.setString(6, worker.getWorkersInfo().getTelefonaNumurs());
+            stmWorkers.setBigDecimal(7, new BigDecimal(worker.getKlaseId()));
 
             stmWorkers.executeUpdate();
 
-            if (Objects.nonNull(skolnieks.getWorkersInfo().getDzivesVieta())) {
-                PreparedStatement stmtAdrese = conn.prepareStatement(INSERT_INTO_ADDRESSES);
-                CallableStatement cstmtAdrese = conn.prepareCall(INSRT_ADRESE_INTO_SKOLNIEKS);
+            if (Objects.nonNull(worker.getAddress())) {
+                PreparedStatement stmtAdrese = db.prepareStatement(INSERT_INTO_ADDRESSES);
+                CallableStatement cstmtAdrese = db.prepareCall(INSERT_ADDRESSES_INTO_WORKERS);
 
-                stmtAdrese.setBigDecimal(1, new BigDecimal(skolnieks.getWorkersInfo().getDzivesVieta().getId()));
-                stmtAdrese.setBigDecimal(2, new BigDecimal(skolnieks.getWorkersInfo().getDzivesVieta().getDzivoklaNumurs()));
-                stmtAdrese.setString(3, skolnieks.getWorkersInfo().getDzivesVieta().getIela());
-                stmtAdrese.setString(4, skolnieks.getWorkersInfo().getDzivesVieta().getPilseta());
-                stmtAdrese.setString(5, skolnieks.getWorkersInfo().getDzivesVieta().getValst());
-                stmtAdrese.setString(6, skolnieks.getWorkersInfo().getDzivesVieta().getPastaIndeks());
+                stmtAdrese.setBigDecimal(1, new BigDecimal(worker.getWorkersInfo().getDzivesVieta().getId()));
+                stmtAdrese.setBigDecimal(2, new BigDecimal(worker.getWorkersInfo().getDzivesVieta().getDzivoklaNumurs()));
+                stmtAdrese.setString(3, worker.getWorkersInfo().getDzivesVieta().getIela());
+                stmtAdrese.setString(4, worker.getWorkersInfo().getDzivesVieta().getPilseta());
+                stmtAdrese.setString(5, worker.getWorkersInfo().getDzivesVieta().getValst());
+                stmtAdrese.setString(6, worker.getWorkersInfo().getDzivesVieta().getPastaIndeks());
 
                 stmtAdrese.executeUpdate();
 
-                cstmtAdrese.setBigDecimal(1, new BigDecimal(skolnieks.getWorkersInfo().getDzivesVieta().getId()));
-                cstmtAdrese.setBigDecimal(2, new BigDecimal(skolnieks.getId()));
+                cstmtAdrese.setBigDecimal(1, new BigDecimal(worker.getWorkersInfo().getDzivesVieta().getId()));
+                cstmtAdrese.setBigDecimal(2, new BigDecimal(worker.getId()));
 
                 cstmtAdrese.execute();
             }
@@ -121,6 +95,32 @@ public class database_connection {
         }
     }
 
+    public static List<Worker> getAllRindasFromWORKERS() {
+        List<Worker> workerList = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            Statement stmt = conn.createStatement();
+            ResultSet resultSet = stmt.executeQuery(GET_ALL_SKOLNIEKS);
+            while (resultSet.next()) {
+                Skolnieks skolnieks = new Skolnieks();
+                skolnieks.setId(Integer.parseInt(resultSet.getObject(1).toString()));
+                skolnieks.setSkolnieksInfo(getSkolasBiedrsFromStruct((Struct) resultSet.getObject(2)));
+                skolnieks.getSkolnieksInfo().setDzivesVieta(getAdreseFromStruct((Struct) ((Ref)
+                        ((Struct) resultSet.getObject(2)).getAttributes()[5]).getObject()));
+                skolnieks.setKlaseId(Integer.parseInt(resultSet.getObject(3).toString()));
+                workerList.add(skolnieks);
+            }
+
+            return workerList;
+        } catch (SQLException e) {
+            System.err.format("SQL Status: %s\n%s", e.getSQLState(), e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
+    }
+
     public static boolean deleteWorkers(int id) {
         try (Connection conn = getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(DELETE_WORKERS);
@@ -133,12 +133,11 @@ public class database_connection {
         }
     }
 
-
-    private static Addresse getAdreseFromStruct(Struct struct) throws SQLException {
-        Addresse address = new Addresse();
+    private static Addresses getAdreseFromStruct(Struct struct) throws SQLException {
+        Addresses address = new Addresses();
 
         address.setId(Integer.parseInt(struct.getAttributes()[0].toString()));
-        address.setCountry(Integer.parseInt(struct.getAttributes()[1].toString()));
+        address.setCountry(struct.getAttributes()[1].toString());
         address.setCity(struct.getAttributes()[2].toString());
         address.setStreet(struct.getAttributes()[3].toString());
         address.setPostal_code(struct.getAttributes()[4].toString());

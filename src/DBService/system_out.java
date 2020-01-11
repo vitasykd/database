@@ -1,18 +1,15 @@
 package DBService;
 
-import Confectionary.Workers;
+import Confectionary.Worker;
 import Confectionary.Addresses;
 
 import java.util.Scanner;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class system_out {
 
 
     private static final String AUTHOR_INFO = "Author: Vitālija Dovgaļuka 171RDB220 3.grupa 3.kurss";
-    private static final String PROGRAM_DESCRIPTION = "Hi! This programm is meant for working with Oracle DB";
+    private static final String PROGRAM_DESCRIPTION = "Hi! This program is meant for working with Oracle DB";
     private static final String COMMANDS_DESCRIPTION = "You can see all the possible operations below:";
     private static final String EXIT_MESSAGE = "If you want to exit press zero.";
     private static final String INSERT_INTO_WORKERS_COMMAND = "If you want to add a new row into table ‘WORKERS’, press number one.";
@@ -56,7 +53,7 @@ public class system_out {
         System.out.println();
     }
 
-    public static void showWorkers(Workers worker) {
+    public static void showWorkers(Worker worker) {
         System.out.println("Information about the worker: ");
         System.out.print("Name: " + worker.getName() + DELIMITER);
         System.out.print("Surname: " + worker.getSurname() + DELIMITER);
@@ -70,8 +67,8 @@ public class system_out {
         System.out.println();
     }
 
-    public static Workers getWorkersFromInput(Scanner sc) {
-        Workers worker = new Workers();
+    public static Worker getWorkersFromInput(Scanner sc) {
+        Worker worker = new Worker();
         Addresses address = new Addresses();
 
         System.out.println("Enter the information about the worker, please:");

@@ -2,14 +2,14 @@ package Confectionary;
 
 public class Addresses {
 
+    private int id;
     private String country;
     private String city;
     private String street;
     private String postal_code;
 
-    public Addresses(){}
 
-    private int id;
+    public Addresses(){}
 
     public int getId() {
         return id;

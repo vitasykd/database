@@ -12,7 +12,7 @@ public class Main {
         try(Scanner sc = new Scanner(System.in)) {
             int choice = Integer.MAX_VALUE;
             while (choice != 0) {
-                system_out.showAgenda();
+                system_out.showMain();
                 system_out.showInputMessage();
                 String inputStr = sc.nextLine();
                 choice = Integer.parseInt(inputStr);
@@ -32,7 +32,7 @@ public class Main {
                         break;
                     }
                     case 2: {
-                        database_connection.getAllRowsFromWorkers().forEach(system_out::shoWorkers);
+                        database_connection.getAllRindasFromWORKERS().forEach(system_out::showWorkers);
                         break;
                     }
                     case 3: {
