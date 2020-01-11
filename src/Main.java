@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+import DBService.database_connection;
+import DBService.system_out;
+
 public class Main {
 
     private static final String IO_ERROR_MESSAGE = "Error: impossible to read data prom the console.";
@@ -29,7 +32,7 @@ public class Main {
                         break;
                     }
                     case 2: {
-                        database_connection.getAllRowsFromWorkers().forEach(system_out::showWorker);
+                        database_connection.getAllRowsFromWorkers().forEach(system_out::shoWorkers);
                         break;
                     }
                     case 3: {

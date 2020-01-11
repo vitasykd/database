@@ -2,12 +2,11 @@ package Confectionary;
 
 public class Workers {
 
-    private int worker_id;
+    private int id;
     private String name;
     private String surname;
     private int phone_number;
     private String occupation;
-    private String hours_per_week;
     private Addresses address;
 
     public Workers(){

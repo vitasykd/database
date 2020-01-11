@@ -18,7 +18,7 @@ public class database_connection {
     private static final String GET_ALL_WORKERS = "SELECT * FROM workers";
     private static final String INSERT_INTO_WORKERS = "INSERT INTO workers VALUES(?, skolasbiedrs(?, ?, ?, ?, ?, null), ?)";
     private static final String INSERT_INTO_ADDRESSES = "INSERT INTO addresses VALUES(address(?, ?, ?, ?, ?, ?))";
-    private static final String INSRT_ADRESE_INTO_WORKERS = "declare\n" +
+    private static final String INSERT_ADDRESSES_INTO_WORKERS = "declare\n" +
             "ats REF addresses;\n" +
             "BEGIN\n" +
             "SELECT REF(A) INTO ats FROM addresses A WHERE A.address_id = ?;\n" +
@@ -39,10 +39,10 @@ public class database_connection {
         ResultSet resultSet = stm.executeQuery(GET_ALL_WORKERS);
         while(resultSet.next()){
             Workers worker = new Workers();
-            worker.setId(Integer.parseInt(resultSet.getObject(1).toString()));
-            worker.setWorkersInfo(getAllRowsFromWorkers());
-                worker.setWorkersInfo(((Struct) resultSet.getObject(2)));
-                worker.getWorkersInfo().setDzivesVieta(getAdreseFromStruct((Struct) ((Ref)
+            worker.setWorker_id(Integer.parseInt(resultSet.getObject(1).toString()));
+            worker.(getAllRowsFromWorkers());
+                worker.(((Struct) resultSet.getObject(2)));
+                worker..setAddress(getAdreseFromStruct((Struct) ((Ref)
                         ((Struct) resultSet.getObject(2)).getAttributes()[5]).getObject()));
                 workerList.add(worker);
             }

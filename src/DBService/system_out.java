@@ -58,14 +58,14 @@ public class system_out {
 
     public static void showWorkers(Workers worker) {
         System.out.println("Information about the worker: ");
-        System.out.print("Name: " + worker.getWorkersInfo().getname() + DELIMITER);
-        System.out.print("Surname: " + worker.getWorkersInfo().getSurname() + DELIMITER);
-        System.out.print("Phone_number: " + worker.getWorkersInfo().getPhone_number() + DELIMITER);
-        System.out.print("Occupation: " + worker.getWorkersInfo().getOccupation() + DELIMITER);
-        System.out.print("Country: " + worker.getWorkersInfo().getAddress().getContry() + DELIMITER);
-        System.out.print("City: " + worker.getWorkersInfo().getAddress().getCity() + DELIMITER);
-        System.out.print("Street: " + worker.getWorkersInfo().getAddress().getStreet() + DELIMITER);
-        System.out.print("Postal code: " + worker.getWorkersInfo().getAddress().getPostal_code() + STOP);
+        System.out.print("Name: " + worker.getName() + DELIMITER);
+        System.out.print("Surname: " + worker.getSurname() + DELIMITER);
+        System.out.print("Phone_number: " + worker.getPhone_number() + DELIMITER);
+        System.out.print("Occupation: " + worker.getOccupation() + DELIMITER);
+        System.out.print("Country: " + worker.getAddress().getCountry() + DELIMITER);
+        System.out.print("City: " + worker.getAddress().getCity() + DELIMITER);
+        System.out.print("Street: " + worker.getAddress().getStreet() + DELIMITER);
+        System.out.print("Postal code: " + worker.getAddress().getPostal_code() + STOP);
         System.out.println();
         System.out.println();
     }
@@ -76,7 +76,7 @@ public class system_out {
 
         System.out.println("Enter the information about the worker, please:");
         System.out.print("Id: ");
-        worker.setId(Integer.parseInt(sc.nextLine()));
+        worker.setWorker_id(Integer.parseInt(sc.nextLine()));
         System.out.println();
         System.out.print("Name: ");
         System.out.println();
