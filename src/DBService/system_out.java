@@ -76,12 +76,16 @@ public class system_out {
         worker.setWorker_id(Integer.parseInt(sc.nextLine()));
         System.out.println();
         System.out.print("Name: ");
+        worker.setName(sc.nextLine());
         System.out.println();
         System.out.print("Surname: ");
+        worker.setSurname(sc.nextLine());
         System.out.println();
         System.out.print("Phone_number: ");
+        worker.setPhone_number(Integer.parseInt(sc.nextLine()));
         System.out.println();
         System.out.print("Occupation: ");
+        worker.setOccupation(sc.nextLine());
         System.out.println();
         System.out.print("Address Id: ");
         address.setId(Integer.parseInt(sc.nextLine()));
@@ -98,7 +102,7 @@ public class system_out {
         System.out.print("Postal code: ");
         address.setPostal_code(sc.nextLine());
         System.out.println();
-
+        worker.setAddress(address);
 
         return worker;
     }
