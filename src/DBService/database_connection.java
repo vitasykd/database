@@ -16,8 +16,9 @@ public class database_connection {
     private static final String password = "DB_171RDB220";
 
     private static final String GET_ALL_WORKERS = "SELECT * FROM workers";
-    private static final String INSERT_INTO_WORKERS = "INSERT INTO workers VALUES(?, skolasbiedrs(?, ?, ?, ?, ?, null), ?)";
-    private static final String INSERT_INTO_ADDRESSES = "INSERT INTO addresses VALUES(address(?, ?, ?, ?, ?, ?))";
+    private static final String INSERT_INTO_WORKERS = "INSERT INTO workers(worker_id, name, surname, phone_number, occupation, address)" +
+            " VALUES(?, ?, ?, ?, ?, null)";
+    private static final String INSERT_INTO_ADDRESSES = "INSERT INTO addresses VALUES(address(?, ?, ?, ?, ?))";
     private static final String INSERT_ADDRESSES_INTO_WORKERS = "declare\n" +
             "ats REF addresses;\n" +
             "BEGIN\n" +
@@ -39,12 +40,10 @@ public class database_connection {
             PreparedStatement stmWorkers = db.prepareStatement(INSERT_INTO_WORKERS);
 
             stmWorkers.setBigDecimal(1, new BigDecimal(worker.getWorker_id()));
-            stmWorkers.setBigDecimal(2, new BigDecimal(worker.getWorkersInfo().getId()));
-            stmWorkers.setString(3, worker.getWorkersInfo().getVards());
-            stmWorkers.setString(4, worker.getWorkersInfo().getUzvards());
-            stmWorkers.setString(5, worker.getWorkersInfo().getePast());
-            stmWorkers.setString(6, worker.getWorkersInfo().getTelefonaNumurs());
-            stmWorkers.setBigDecimal(7, new BigDecimal(worker.getKlaseId()));
+            stmWorkers.setString(2, worker.getName());
+            stmWorkers.setString(3, worker.getSurname());
+            stmWorkers.setBigDecimal(4, new BigDecimal(worker.getPhone_number()));
+            stmWorkers.setString(5, worker.getOccupation());
 
             stmWorkers.executeUpdate();
 
@@ -52,17 +51,16 @@ public class database_connection {
                 PreparedStatement stmtAdrese = db.prepareStatement(INSERT_INTO_ADDRESSES);
                 CallableStatement cstmtAdrese = db.prepareCall(INSERT_ADDRESSES_INTO_WORKERS);
 
-                stmtAdrese.setBigDecimal(1, new BigDecimal(worker.getWorkersInfo().getDzivesVieta().getId()));
-                stmtAdrese.setBigDecimal(2, new BigDecimal(worker.getWorkersInfo().getDzivesVieta().getDzivoklaNumurs()));
-                stmtAdrese.setString(3, worker.getWorkersInfo().getDzivesVieta().getIela());
-                stmtAdrese.setString(4, worker.getWorkersInfo().getDzivesVieta().getPilseta());
-                stmtAdrese.setString(5, worker.getWorkersInfo().getDzivesVieta().getValst());
-                stmtAdrese.setString(6, worker.getWorkersInfo().getDzivesVieta().getPastaIndeks());
+                stmtAdrese.setBigDecimal(1, new BigDecimal(worker.getAddress().getId()));
+                stmtAdrese.setString(2, worker.getAddress().getCountry());
+                stmtAdrese.setString(3, worker.getAddress().getCity());
+                stmtAdrese.setString(4, worker.getAddress().getStreet());
+                stmtAdrese.setString(5, worker.getAddress().getPostal_code());
 
                 stmtAdrese.executeUpdate();
 
-                cstmtAdrese.setBigDecimal(1, new BigDecimal(worker.getWorkersInfo().getDzivesVieta().getId()));
-                cstmtAdrese.setBigDecimal(2, new BigDecimal(worker.getId()));
+                cstmtAdrese.setBigDecimal(1, new BigDecimal(worker.getAddress().getId()));
+                cstmtAdrese.setBigDecimal(2, new BigDecimal(worker.getWorker_id()));
 
                 cstmtAdrese.execute();
             }
@@ -99,15 +97,17 @@ public class database_connection {
         List<Worker> workerList = new ArrayList<>();
         try (Connection conn = getConnection()) {
             Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(GET_ALL_SKOLNIEKS);
+            ResultSet resultSet = stmt.executeQuery(GET_ALL_WORKERS);
             while (resultSet.next()) {
-                Skolnieks skolnieks = new Skolnieks();
-                skolnieks.setId(Integer.parseInt(resultSet.getObject(1).toString()));
-                skolnieks.setSkolnieksInfo(getSkolasBiedrsFromStruct((Struct) resultSet.getObject(2)));
-                skolnieks.getSkolnieksInfo().setDzivesVieta(getAdreseFromStruct((Struct) ((Ref)
-                        ((Struct) resultSet.getObject(2)).getAttributes()[5]).getObject()));
-                skolnieks.setKlaseId(Integer.parseInt(resultSet.getObject(3).toString()));
-                workerList.add(skolnieks);
+                Worker worker = new Worker();
+                worker.setWorker_id(Integer.parseInt(resultSet.getObject(1).toString()));
+                worker.setName(resultSet.getObject(2).toString());
+                worker.setSurname(resultSet.getObject(3).toString());
+                worker.setPhone_number(Integer.parseInt(resultSet.getObject(4).toString()));
+                worker.setOccupation(resultSet.getObject(4).toString());
+                worker.setAddress(getAdreseFromStruct((Struct) ((Ref)
+                        ((Struct) resultSet.getObject(3))).getObject()));
+                workerList.add(worker);
             }
 
             return workerList;
